@@ -10,8 +10,6 @@ let displayMentions2 (mention : TweetSharp.TwitterStatus) =
 let displayFollowers (follower : int64) =
     printfn "%i" follower
 
-let test (x : TwitterUser) = 
-    x
 
 [<EntryPoint>]
 let main argv = 
@@ -37,13 +35,12 @@ let main argv =
     printfn "Il y a %i potentiels personnes à follow, voulez vous le faire? (Y/N)" allUserIdsWithMatchingKeyword.Length
     let answer = Console.ReadLine()
 
-    let t = followUser {Id = 12; Description = "toto"}
-
     if answer.ToLower().Equals("Y") then
-        allUserIdsWithMatchingKeyword |> Array.map test
-        //(fun x -> followUser x)
-
-    printfn "Fin..."
-    Console.ReadLine() |> ignore
-    0 // return an integer exit code
-                           
+        allUserIdsWithMatchingKeyword |> Array.map followUser |> ignore
+        Console.ReadLine() |> ignore
+        printfn "Fin"
+        0
+     else
+        Console.ReadLine() |> ignore
+        printfn "Fin"
+        0                           
