@@ -1685,17 +1685,17 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v2.0' Or $(TargetFrameworkVersion) == 'v3.0')">
       <ItemGroup>
         <Reference Include="Hammock">
-          <HintPath>..\packages\TweetSharp\lib\2.0\Hammock.dll</HintPath>
+          <HintPath>..\packages\TweetMoaSharp\lib\2.0\Hammock.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
-        <Reference Include="Newtonsoft.Json">
-          <HintPath>..\packages\TweetSharp\lib\2.0\Newtonsoft.Json.dll</HintPath>
+        <Reference Include="LinqBridge">
+          <HintPath>..\packages\TweetMoaSharp\lib\2.0\LinqBridge.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
         <Reference Include="TweetSharp">
-          <HintPath>..\packages\TweetSharp\lib\2.0\TweetSharp.dll</HintPath>
+          <HintPath>..\packages\TweetMoaSharp\lib\2.0\TweetSharp.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -1704,36 +1704,68 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v3.5'">
       <ItemGroup>
         <Reference Include="Hammock.ClientProfile">
-          <HintPath>..\packages\TweetSharp\lib\3.5\Hammock.ClientProfile.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="Newtonsoft.Json">
-          <HintPath>..\packages\TweetSharp\lib\3.5\Newtonsoft.Json.dll</HintPath>
+          <HintPath>..\packages\TweetMoaSharp\lib\3.5\Hammock.ClientProfile.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
         <Reference Include="TweetSharp">
-          <HintPath>..\packages\TweetSharp\lib\3.5\TweetSharp.dll</HintPath>
+          <HintPath>..\packages\TweetMoaSharp\lib\3.5\TweetSharp.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
       </ItemGroup>
     </When>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.0' Or $(TargetFrameworkVersion) == 'v4.0.3' Or $(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1' Or $(TargetFrameworkVersion) == 'v4.6.2' Or $(TargetFrameworkVersion) == 'v4.6.3' Or $(TargetFrameworkVersion) == 'v4.7' Or $(TargetFrameworkVersion) == 'v4.7.1')">
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.0' Or $(TargetFrameworkVersion) == 'v4.0.3')">
       <ItemGroup>
         <Reference Include="Hammock.ClientProfile">
-          <HintPath>..\packages\TweetSharp\lib\4.0\Hammock.ClientProfile.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="Newtonsoft.Json">
-          <HintPath>..\packages\TweetSharp\lib\4.0\Newtonsoft.Json.dll</HintPath>
+          <HintPath>..\packages\TweetMoaSharp\lib\4.0\Hammock.ClientProfile.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
         <Reference Include="TweetSharp">
-          <HintPath>..\packages\TweetSharp\lib\4.0\TweetSharp.dll</HintPath>
+          <HintPath>..\packages\TweetMoaSharp\lib\4.0\TweetSharp.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1' Or $(TargetFrameworkVersion) == 'v4.6.2' Or $(TargetFrameworkVersion) == 'v4.6.3' Or $(TargetFrameworkVersion) == 'v4.7' Or $(TargetFrameworkVersion) == 'v4.7.1')">
+      <ItemGroup>
+        <Reference Include="Hammock.ClientProfile">
+          <HintPath>..\packages\TweetMoaSharp\lib\4.5\Hammock.ClientProfile.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="TweetSharp">
+          <HintPath>..\packages\TweetMoaSharp\lib\4.5\TweetSharp.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <When Condition="($(TargetFrameworkIdentifier) == 'WindowsPhoneApp') Or ($(TargetFrameworkIdentifier) == 'MonoAndroid' And ($(TargetFrameworkVersion) == 'v7.0' Or $(TargetFrameworkVersion) == 'v7.1' Or $(TargetFrameworkVersion) == 'v8.0')) Or ($(TargetFrameworkIdentifier) == 'MonoTouch') Or ($(TargetFrameworkIdentifier) == '.NETCoreApp' And ($(TargetFrameworkVersion) == 'v1.0' Or $(TargetFrameworkVersion) == 'v1.1' Or $(TargetFrameworkVersion) == 'v2.0')) Or ($(TargetFrameworkIdentifier) == '.NETStandard' And ($(TargetFrameworkVersion) == 'v1.0' Or $(TargetFrameworkVersion) == 'v1.1' Or $(TargetFrameworkVersion) == 'v1.2' Or $(TargetFrameworkVersion) == 'v1.3' Or $(TargetFrameworkVersion) == 'v1.4' Or $(TargetFrameworkVersion) == 'v1.5' Or $(TargetFrameworkVersion) == 'v1.6' Or $(TargetFrameworkVersion) == 'v2.0')) Or ($(TargetFrameworkIdentifier) == '.NETCore' And $(TargetFrameworkVersion) == 'v5.0') Or ($(TargetFrameworkIdentifier) == 'WindowsPhone' And ($(TargetFrameworkVersion) == 'v8.0' Or $(TargetFrameworkVersion) == 'v8.1')) Or ($(TargetFrameworkIdentifier) == 'Xamarin.iOS') Or ($(TargetFrameworkIdentifier) == 'Xamarin.Mac') Or ($(TargetFrameworkIdentifier) == 'Xamarin.tvOS') Or ($(TargetFrameworkIdentifier) == 'Xamarin.watchOS')">
+      <ItemGroup>
+        <Reference Include="Hammock.ClientProfile">
+          <HintPath>..\packages\TweetMoaSharp\lib\netstandard1.0\Hammock.ClientProfile.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="TweetSharp">
+          <HintPath>..\packages\TweetMoaSharp\lib\netstandard1.0\TweetSharp.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <When Condition="($(TargetFrameworkProfile) == 'Profile32') Or ($(TargetFrameworkIdentifier) == '.NETCore' And ($(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v5.0'))">
+      <ItemGroup>
+        <Reference Include="Hammock.WinRT">
+          <HintPath>..\packages\TweetMoaSharp\lib\portable-win81+wpa81\Hammock.WinRT.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="TweetSharp.WinRT">
+          <HintPath>..\packages\TweetMoaSharp\lib\portable-win81+wpa81\TweetSharp.WinRT.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -1742,51 +1774,41 @@
     <When Condition="$(TargetFrameworkIdentifier) == 'Silverlight' And ($(TargetFrameworkVersion) == 'v4.0' Or $(TargetFrameworkVersion) == 'v5.0')">
       <ItemGroup>
         <Reference Include="Hammock.Silverlight">
-          <HintPath>..\packages\TweetSharp\lib\sl4\Hammock.Silverlight.dll</HintPath>
+          <HintPath>..\packages\TweetMoaSharp\lib\sl4\Hammock.Silverlight.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
         <Reference Include="ICSharpCode.SharpZipLib.Silverlight">
-          <HintPath>..\packages\TweetSharp\lib\sl4\ICSharpCode.SharpZipLib.Silverlight.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="Newtonsoft.Json">
-          <HintPath>..\packages\TweetSharp\lib\sl4\Newtonsoft.Json.dll</HintPath>
+          <HintPath>..\packages\TweetMoaSharp\lib\sl4\ICSharpCode.SharpZipLib.Silverlight.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
         <Reference Include="System.Xml.Linq">
-          <HintPath>..\packages\TweetSharp\lib\sl4\System.Xml.Linq.dll</HintPath>
+          <HintPath>..\packages\TweetMoaSharp\lib\sl4\System.Xml.Linq.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
         <Reference Include="TweetSharp.Silverlight">
-          <HintPath>..\packages\TweetSharp\lib\sl4\TweetSharp.Silverlight.dll</HintPath>
+          <HintPath>..\packages\TweetMoaSharp\lib\sl4\TweetSharp.Silverlight.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
       </ItemGroup>
     </When>
-    <When Condition="$(TargetFrameworkIdentifier) == 'WindowsPhone' And ($(TargetFrameworkVersion) == 'v7.1' Or $(TargetFrameworkVersion) == 'v7.5' Or $(TargetFrameworkVersion) == 'v8.0' Or $(TargetFrameworkVersion) == 'v8.1')">
+    <When Condition="$(TargetFrameworkIdentifier) == 'WindowsPhone' And ($(TargetFrameworkVersion) == 'v7.1' Or $(TargetFrameworkVersion) == 'v7.5')">
       <ItemGroup>
         <Reference Include="Hammock.WindowsPhone">
-          <HintPath>..\packages\TweetSharp\lib\sl4-wp\Hammock.WindowsPhone.dll</HintPath>
+          <HintPath>..\packages\TweetMoaSharp\lib\sl4-wp\Hammock.WindowsPhone.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
         <Reference Include="ICSharpCode.SharpZipLib.WindowsPhone">
-          <HintPath>..\packages\TweetSharp\lib\sl4-wp\ICSharpCode.SharpZipLib.WindowsPhone.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="Newtonsoft.Json">
-          <HintPath>..\packages\TweetSharp\lib\sl4-wp\Newtonsoft.Json.dll</HintPath>
+          <HintPath>..\packages\TweetMoaSharp\lib\sl4-wp\ICSharpCode.SharpZipLib.WindowsPhone.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
         <Reference Include="TweetSharp.WindowsPhone">
-          <HintPath>..\packages\TweetSharp\lib\sl4-wp\TweetSharp.WindowsPhone.dll</HintPath>
+          <HintPath>..\packages\TweetMoaSharp\lib\sl4-wp\TweetSharp.WindowsPhone.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

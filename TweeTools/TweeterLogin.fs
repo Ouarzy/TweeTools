@@ -17,9 +17,33 @@ let openPage =
 let getAccessToken (verifier : string) = 
     twitterService.GetAccessToken(requestToken, verifier)
 
+let listTweetsMentioningMeOptions ()= 
+       let option = new ListTweetsMentioningMeOptions()
+       option.ContributorDetails <- new System.Nullable<bool>(true)
+       option
+
 // Step 4 - User authenticates using the Access Token
-let displayMentions (accessToken : OAuthAccessToken) =
+let getMentions (accessToken : OAuthAccessToken) =
     twitterService.AuthenticateWith(accessToken.Token, accessToken.TokenSecret)
-    let result = twitterService.ListTweetsMentioningMe(new ListTweetsMentioningMeOptions())
+    let result = twitterService.ListTweetsMentioningMe(listTweetsMentioningMeOptions())
     result
 
+let userProfileForOption ()=
+        let option =new GetUserProfileForOptions()
+        option.ScreenName <- "lacuisineduweb"
+        option
+
+let getuserProfileFor (accessToken : OAuthAccessToken) =
+    twitterService.AuthenticateWith(accessToken.Token, accessToken.TokenSecret)
+    let result = twitterService.GetUserProfileFor(userProfileForOption())
+    result
+
+let listFollowerIdsOfOptions () =
+        let option =new ListFollowerIdsOfOptions()
+        option.ScreenName <- "lacuisineduweb"
+        option
+
+let listFollowersOf (accessToken : OAuthAccessToken) =
+    twitterService.AuthenticateWith(accessToken.Token, accessToken.TokenSecret)
+    let result = twitterService.ListFollowerIdsOf(listFollowerIdsOfOptions())
+    result
