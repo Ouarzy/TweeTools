@@ -39,6 +39,7 @@ let getuserProfileFor userName =
 let listFollowerIdsOfOptions userName =
         let option =new ListFollowerIdsOfOptions()
         option.ScreenName <- userName
+        option.Count <- new Nullable<int>(10000)
         option
 
 let listFollowersOf userName =
@@ -48,11 +49,13 @@ let listFollowersOf userName =
 let getUserProfileForOptions (userId : int64) =
     let option =new GetUserProfileForOptions()
     option.UserId <- new Nullable<int64>(userId)
+    option.IncludeEntities <- new Nullable<bool>(true)
     option
 
 let getDescriptionUser (userId : int64) =
     let result = twitterService.GetUserProfileFor(getUserProfileForOptions(userId))
-    {Id = result.Id; Description = result.Description}
+    if result = null then None
+    else Some {Id = result.Id; Description = result.Description}
 
 let followUserOptions (userId : int64) =
     let option =new FollowUserOptions()
