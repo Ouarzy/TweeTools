@@ -33,13 +33,15 @@ let getUserProfileForOptions (userId : int64) =
     option.UserId <- new Nullable<int64>(userId)
     option
 
-let rec getDescriptionUser (userId : int64) =
-    let result = twitterService.GetUserProfileFor(getUserProfileForOptions(userId))
-    match result with
-    | null -> 
+let rec getDescriptionUserAsync (userId : int64) =
+    async{
+    let! result = twitterService.GetUserProfileForAsync(getUserProfileForOptions(userId))|> Async.AwaitTask
+    if result.Response.RateLimitStatus.RemainingHits = 0 then
         Async.RunSynchronously sleep
-        getDescriptionUser userId
-    | _ -> {Id = result.Id; Description = result.Description; ScreenName = result.ScreenName}
+        return Async.RunSynchronously (getDescriptionUserAsync userId)
+    else
+        return {Id = result.Value.Id; Description = result.Value.Description; ScreenName = result.Value.ScreenName}
+    }
 
 let followUserOptions (user : TwitterUser) =
     let option =new FollowUserOptions()
@@ -48,10 +50,10 @@ let followUserOptions (user : TwitterUser) =
     option.Follow <- new Nullable<bool>(true)
     option
 
-let rec followUser (user : TwitterUser) =
-    let result = twitterService.FollowUser(followUserOptions(user))
-    match result with
-    | null -> 
-        Async.RunSynchronously sleep
-        followUser user
-    | _ -> result
+let followUserAsync (user : TwitterUser) =
+    async{
+    let! result = twitterService.FollowUserAsync(followUserOptions(user)) |> Async.AwaitTask
+    match result.Response.Errors with
+        | null -> return true
+        | _ -> return false
+    }

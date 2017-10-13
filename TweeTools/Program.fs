@@ -23,7 +23,7 @@ let main argv =
     printfn "Quelle mot clé souhaitez vous analyser dans la description des followers?"
     let expectedkeyWord = Console.ReadLine()
     
-    let allDescriptions = followersIds |> Seq.map getDescriptionUser
+    let allDescriptions = followersIds |> Seq.map (fun x -> Async.RunSynchronously (getDescriptionUserAsync x))
     let allUserIdsWithMatchingKeyword = allDescriptions |> Seq.filter (fun twitterUser -> 
         printf "."
         twitterUser.Description.ToLower().Contains(expectedkeyWord.ToLower())) |> Seq.toArray
@@ -34,10 +34,10 @@ let main argv =
 
     match answer.ToLower() with
     | "y" ->
-        allUserIdsWithMatchingKeyword |> Array.map followUser |> ignore
-        printfn "Users added"
+        let userAdded = allUserIdsWithMatchingKeyword |> Array.map (fun x -> Async.RunSynchronously (followUserAsync x))
+        printfn "Vous suivez %i nouveaux comptes" (userAdded |> Array.filter (fun x -> x = true) |> Array.length) 
     | _ -> 
-        printfn "No Users added"
+        printfn "Vous ne suivez pas de nouveaux comptes"
 
     printfn "Fin"
     Console.ReadLine() |> ignore
