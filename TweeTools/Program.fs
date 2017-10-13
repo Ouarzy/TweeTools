@@ -25,7 +25,6 @@ let main argv =
     
     let allDescriptions = followersIds |> Seq.map (fun x -> Async.RunSynchronously (getDescriptionUserAsync x))
     let allUserIdsWithMatchingKeyword = allDescriptions |> Seq.filter (fun twitterUser -> 
-        printf "."
         twitterUser.Description.ToLower().Contains(expectedkeyWord.ToLower())) |> Seq.toArray
 
     printfn "Il y a %i potentiels personnes à follow, voulez vous le faire? (Y/N)" allUserIdsWithMatchingKeyword.Length
@@ -34,8 +33,10 @@ let main argv =
 
     match answer.ToLower() with
     | "y" ->
-        let userAdded = allUserIdsWithMatchingKeyword |> Array.map (fun x -> Async.RunSynchronously (followUserAsync x))
-        printfn "Vous suivez %i nouveaux comptes" (userAdded |> Array.filter (fun x -> x = true) |> Array.length) 
+        let userAdded = allUserIdsWithMatchingKeyword |> Array.map (fun x -> 
+            printf "."
+            Async.RunSynchronously (followUserAsync x))
+        printfn "\nVous suivez %i nouveaux comptes" (userAdded |> Array.filter (fun x -> x = true) |> Array.length) 
     | _ -> 
         printfn "Vous ne suivez pas de nouveaux comptes"
 

@@ -5,7 +5,7 @@ open TweeterLogin
 open System
 
 let sleep = async{
-    printfn "Taux de sollicitation max atteint pour Twitter API, 15min d'attente"
+    printfn "\nTaux de sollicitation max atteint pour Twitter API, 15min d'attente"
     do! Async.Sleep (1000 * 60 * 15)
     printfn "Reprise du programme"
     }
