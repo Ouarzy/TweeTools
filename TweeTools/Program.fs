@@ -1,14 +1,9 @@
 ﻿module main
 
-open TweeterLogin
 open System
+open TweeterLogin
+open TweeterApi
 
-
-let displayMentions2 (mention : TweetSharp.TwitterStatus) =
-    printfn "%s" mention.Author.ScreenName
-
-let displayFollowers (follower : int64) =
-    printfn "%i" follower
 
 [<EntryPoint>]
 let main argv = 
@@ -37,12 +32,13 @@ let main argv =
   
     let answer = Console.ReadLine()
 
-    if answer.ToLower().Equals("y") then
+    match answer.ToLower() with
+    | "y" ->
         allUserIdsWithMatchingKeyword |> Array.map followUser |> ignore
-        printfn "Fin"
-        Console.ReadLine() |> ignore
-        0
-     else
-        printfn "Fin"
-        Console.ReadLine() |> ignore
-        0                           
+        printfn "Users added"
+    | _ -> 
+        printfn "No Users added"
+
+    printfn "Fin"
+    Console.ReadLine() |> ignore
+    0
