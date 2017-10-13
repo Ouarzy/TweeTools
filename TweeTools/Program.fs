@@ -10,15 +10,6 @@ let displayMentions2 (mention : TweetSharp.TwitterStatus) =
 let displayFollowers (follower : int64) =
     printfn "%i" follower
 
-let doesUserIsSomeAndContainsKeyword twitterUser keyword =
-    match twitterUser with
-    | Some x -> x.Description.Contains(keyword)
-    | None -> false
-
-let toTwitterUser twitterUser =
-    match twitterUser with
-    | Some x -> x
-
 [<EntryPoint>]
 let main argv = 
     printfn "Bonjour!"
@@ -38,7 +29,9 @@ let main argv =
     let expectedkeyWord = Console.ReadLine()
     
     let allDescriptions = followersIds |> Seq.map getDescriptionUser
-    let allUserIdsWithMatchingKeyword = allDescriptions |> Seq.filter (fun twitterUser -> doesUserIsSomeAndContainsKeyword twitterUser expectedkeyWord) |> Seq.map toTwitterUser |> Seq.toArray
+    let allUserIdsWithMatchingKeyword = allDescriptions |> Seq.filter (fun twitterUser -> 
+        printf "."
+        twitterUser.Description.ToLower().Contains(expectedkeyWord.ToLower())) |> Seq.toArray
 
     printfn "Il y a %i potentiels personnes à follow, voulez vous le faire? (Y/N)" allUserIdsWithMatchingKeyword.Length
   
