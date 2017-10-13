@@ -4,6 +4,36 @@ open System
 open TweeterLogin
 open TweeterApi
 
+let fin ()= 
+     printfn "Fin"
+     Console.ReadLine() |> ignore
+     0
+
+
+let tryAnalyzeAccount (optionFollowersIds : Option<TweetSharp.TwitterCursorList<int64>>) (expectedAccount : string)=
+        let followersIds = optionFollowersIds.Value
+        printfn "Le compte %s a %i followers" expectedAccount followersIds.Count
+    
+        printfn "Quelle mot clé souhaitez vous analyser dans la description des followers?"
+        let expectedkeyWord = Console.ReadLine()
+    
+        let allDescriptions = followersIds |> Seq.map (fun x -> Async.RunSynchronously (getDescriptionUserAsync x))
+        let allUserIdsWithMatchingKeyword = allDescriptions |> Seq.filter (fun twitterUser -> 
+            twitterUser.Description.ToLower().Contains(expectedkeyWord.ToLower())) |> Seq.toArray
+
+        printfn "Il y a %i potentiels personnes à follow, voulez vous le faire? (Y/N)" allUserIdsWithMatchingKeyword.Length
+  
+        let answer = Console.ReadLine()
+
+        match answer.ToLower() with
+        | "y" ->
+            let userAdded = allUserIdsWithMatchingKeyword |> Array.map (fun x -> 
+                printf "."
+                Async.RunSynchronously (followUserAsync x))
+            printfn "\nVous suivez %i nouveaux comptes" (userAdded |> Array.filter (fun x -> x = true) |> Array.length) 
+        | _ -> 
+            printfn "Vous ne suivez pas de nouveaux comptes"
+
 
 [<EntryPoint>]
 let main argv = 
@@ -17,29 +47,11 @@ let main argv =
     printfn "Quelle compte voulez vous analyser?"
     let expectedAccount = Console.ReadLine()
     
-    let followersIds = listFollowersOf expectedAccount
-    printfn "Le compte %s a %i followers" expectedAccount followersIds.Count
-    
-    printfn "Quelle mot clé souhaitez vous analyser dans la description des followers?"
-    let expectedkeyWord = Console.ReadLine()
-    
-    let allDescriptions = followersIds |> Seq.map (fun x -> Async.RunSynchronously (getDescriptionUserAsync x))
-    let allUserIdsWithMatchingKeyword = allDescriptions |> Seq.filter (fun twitterUser -> 
-        twitterUser.Description.ToLower().Contains(expectedkeyWord.ToLower())) |> Seq.toArray
+    let optionFollowersIds = listFollowersOf expectedAccount
 
-    printfn "Il y a %i potentiels personnes à follow, voulez vous le faire? (Y/N)" allUserIdsWithMatchingKeyword.Length
-  
-    let answer = Console.ReadLine()
-
-    match answer.ToLower() with
-    | "y" ->
-        let userAdded = allUserIdsWithMatchingKeyword |> Array.map (fun x -> 
-            printf "."
-            Async.RunSynchronously (followUserAsync x))
-        printfn "\nVous suivez %i nouveaux comptes" (userAdded |> Array.filter (fun x -> x = true) |> Array.length) 
-    | _ -> 
-        printfn "Vous ne suivez pas de nouveaux comptes"
-
-    printfn "Fin"
-    Console.ReadLine() |> ignore
-    0
+    if optionFollowersIds.IsNone then
+        printfn "Ce compte n'existe pas."
+        fin()
+    else
+        tryAnalyzeAccount optionFollowersIds expectedAccount
+        fin()
