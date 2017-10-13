@@ -4,19 +4,17 @@ open TweetSharp;
 open TweeterLogin
 open System
 
-let rec sleepForNbMinsAsync (nbMinutes : int64)= async{
+let rec sleepForNbMinsAsync nbMinutes = async{
     printfn "\nEncore %i mins" nbMinutes
     do! Async.Sleep (1000 * 60)
-    if nbMinutes = (int64)0 then return (int64)0
-    else return Async.RunSynchronously (sleepForNbMinsAsync (nbMinutes-(int64)1))
+    if nbMinutes = 0 then return 0
+    else return Async.RunSynchronously (sleepForNbMinsAsync (nbMinutes-1))
     }
 
-
-let requestWaitForMaxRateDuring (nbMinutes : int64) = 
+let requestWaitForMaxRateDuring nbMinutes = 
     printfn "\nTaux de sollicitation max atteint pour Twitter API, %i mins d'attente" nbMinutes
     Async.RunSynchronously (sleepForNbMinsAsync nbMinutes) |> ignore
-    printfn "Reprise du programme"
-    
+    printfn "Reprise du programme"    
 
 let userProfileForOption userName=
         let option =new GetUserProfileForOptions()
@@ -43,14 +41,18 @@ let getUserProfileForOptions (userId : int64) =
     option.UserId <- new Nullable<int64>(userId)
     option
 
+let timeInMinutesBeforeReset (resetTime : DateTime) = 
+    let msBeforeReset = resetTime - DateTime.Now
+    msBeforeReset.Minutes
+
 let rec getDescriptionUserAsync (userId : int64) =
     async{
     let! result = twitterService.GetUserProfileForAsync(getUserProfileForOptions(userId))|> Async.AwaitTask
     if result.Value = null then
-        requestWaitForMaxRateDuring ((int64)15)
+        requestWaitForMaxRateDuring 15
         return Async.RunSynchronously (getDescriptionUserAsync userId)
     else if result.Response.RateLimitStatus.RemainingHits = 0 then
-        requestWaitForMaxRateDuring (result.Response.RateLimitStatus.ResetTimeInSeconds / ((int64)60))
+        requestWaitForMaxRateDuring (timeInMinutesBeforeReset result.Response.RateLimitStatus.ResetTime)
         return Async.RunSynchronously (getDescriptionUserAsync userId)
     else
         return {Id = result.Value.Id; Description = result.Value.Description; ScreenName = result.Value.ScreenName}
