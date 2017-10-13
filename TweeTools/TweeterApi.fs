@@ -4,7 +4,7 @@ open TweetSharp;
 open TweeterLogin
 open System
 
-let sleep = async{
+let sleepFor15Mins = async{
     printfn "\nTaux de sollicitation max atteint pour Twitter API, 15min d'attente"
     do! Async.Sleep (1000 * 60 * 15)
     printfn "Reprise du programme"
@@ -37,7 +37,7 @@ let rec getDescriptionUserAsync (userId : int64) =
     async{
     let! result = twitterService.GetUserProfileForAsync(getUserProfileForOptions(userId))|> Async.AwaitTask
     if result.Response.RateLimitStatus.RemainingHits = 0 then
-        Async.RunSynchronously sleep
+        Async.RunSynchronously sleepFor15Mins
         return Async.RunSynchronously (getDescriptionUserAsync userId)
     else
         return {Id = result.Value.Id; Description = result.Value.Description; ScreenName = result.Value.ScreenName}
