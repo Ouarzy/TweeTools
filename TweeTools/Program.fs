@@ -18,8 +18,11 @@ let tryAnalyzeAccount (optionFollowersIds : Option<TweetSharp.TwitterCursorList<
         let expectedkeyWord = Console.ReadLine()
     
         let allDescriptions = followersIds |> Seq.map (fun x -> Async.RunSynchronously (getDescriptionUserAsync x))
-        let allUserIdsWithMatchingKeyword = allDescriptions |> Seq.filter (fun twitterUser -> 
-            twitterUser.Description.ToLower().Contains(expectedkeyWord.ToLower())) |> Seq.toArray
+        let allUserIdsWithMatchingKeyword = 
+            allDescriptions |>
+            Seq.filter (fun twitterUser -> twitterUser.IsSome && twitterUser.Value.Description.ToLower().Contains(expectedkeyWord.ToLower())) |>
+            Seq.map (fun x -> x.Value) |>
+            Seq.toArray
 
         printfn "Il y a %i potentiels personnes à follow, voulez vous le faire? (Y/N)" allUserIdsWithMatchingKeyword.Length
   

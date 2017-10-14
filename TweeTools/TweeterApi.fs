@@ -48,14 +48,13 @@ let timeInMinutesBeforeReset (resetTime : DateTime) =
 let rec getDescriptionUserAsync (userId : int64) =
     async{
     let! result = twitterService.GetUserProfileForAsync(getUserProfileForOptions(userId))|> Async.AwaitTask
-    if result.Value = null then
-        requestWaitForMaxRateDuring 15
-        return Async.RunSynchronously (getDescriptionUserAsync userId)
-    else if result.Response.RateLimitStatus.RemainingHits = 0 then
+    if result.Response.RateLimitStatus.RemainingHits = 0 then
         requestWaitForMaxRateDuring (timeInMinutesBeforeReset result.Response.RateLimitStatus.ResetTime)
         return Async.RunSynchronously (getDescriptionUserAsync userId)
+    else if result.Value = null then
+        return None
     else
-        return {Id = result.Value.Id; Description = result.Value.Description; ScreenName = result.Value.ScreenName}
+        return Some {Id = result.Value.Id; Description = result.Value.Description; ScreenName = result.Value.ScreenName}
     }
 
 let followUserOptions (user : TwitterUser) =
