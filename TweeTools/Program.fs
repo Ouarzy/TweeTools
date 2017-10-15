@@ -28,8 +28,8 @@ let tryAnalyzeAccount (optionFollowersIds : Option<TweetSharp.TwitterCursorList<
   
         let answer = Console.ReadLine()
 
-        match answer.ToLower() with
-        | "y" ->
+        match answer.ToLower().Contains("y") with
+        | true ->
             let userAdded = allUserIdsWithMatchingKeyword |> Array.map (fun x -> 
                 printf "."
                 Async.RunSynchronously (followUserAsync x))
