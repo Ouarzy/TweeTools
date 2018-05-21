@@ -24,13 +24,25 @@ let userProfileForOption userName=
 let getuserProfileFor userName =
     twitterService.GetUserProfileFor(userProfileForOption(userName))
 
-let listFollowerIdsOfOptions userName =
+let private listFollowerIdsOfOptions userName =
         let option =new ListFollowerIdsOfOptions()
         option.ScreenName <- userName
         option
 
 let listFollowersOf userName =
     let result = twitterService.ListFollowerIdsOf(listFollowerIdsOfOptions(userName))
+    if result = null then
+        None
+    else
+        Some result
+
+let private listSubscriptionsOfOptions userName =
+        let option =new ListSubscriptionsOptions()
+        option.ScreenName <- userName
+        option
+
+let listSubscriptionsOf userName =
+    let result = twitterService.ListSubscriptions(listSubscriptionsOfOptions(userName)) |> Seq.map (fun x -> x.User.Id)
     if result = null then
         None
     else
@@ -57,7 +69,7 @@ let rec getDescriptionUserAsync (userId : int64) =
         return Some {Id = result.Value.Id; Description = result.Value.Description; ScreenName = result.Value.ScreenName}
     }
 
-let followUserOptions (user : TwitterUser) =
+let private followUserOptions (user : TwitterUser) =
     let option =new FollowUserOptions()
     option.UserId <- new Nullable<int64>(user.Id)
     option.ScreenName <- user.ScreenName
@@ -67,6 +79,21 @@ let followUserOptions (user : TwitterUser) =
 let followUserAsync (user : TwitterUser) =
     async{
     let! result = twitterService.FollowUserAsync(followUserOptions(user)) |> Async.AwaitTask
+    match result.Response.Errors with
+        | null -> return true
+        | _ -> return false
+    }
+
+let private unfollowUserOptions (user : TwitterUser) =
+    let option =new UnfollowUserOptions()
+    option.UserId <- new Nullable<int64>(user.Id)
+    option.ScreenName <- user.ScreenName
+    option
+
+
+let unfollowUserAsync (user : TwitterUser) =
+    async{
+    let! result = twitterService.UnfollowUserAsync(unfollowUserOptions(user)) |> Async.AwaitTask
     match result.Response.Errors with
         | null -> return true
         | _ -> return false

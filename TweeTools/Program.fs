@@ -10,7 +10,7 @@ let fin ()=
      0
 
 
-let tryAnalyzeAccount (optionFollowersIds : Option<TweetSharp.TwitterCursorList<int64>>) (expectedAccount : string)=
+let tryFollowAccount (optionFollowersIds : Option<TweetSharp.TwitterCursorList<int64>>) (expectedAccount : string)=
         let followersIds = optionFollowersIds.Value
         printfn "Le compte %s a %i followers" expectedAccount followersIds.Count
     
@@ -24,7 +24,7 @@ let tryAnalyzeAccount (optionFollowersIds : Option<TweetSharp.TwitterCursorList<
             Seq.map (fun x -> x.Value) |>
             Seq.toArray
 
-        printfn "Il y a %i potentiels personnes à follow, voulez vous le faire? (Y/N)" allUserIdsWithMatchingKeyword.Length
+        printfn "Il y a %i potentiels personnes à follow, voulez vous les suivre? (y/n)" allUserIdsWithMatchingKeyword.Length
   
         let answer = Console.ReadLine()
 
@@ -34,9 +34,53 @@ let tryAnalyzeAccount (optionFollowersIds : Option<TweetSharp.TwitterCursorList<
                 printf "."
                 Async.RunSynchronously (followUserAsync x))
             printfn "\nVous suivez %i nouveaux comptes" (userAdded |> Array.filter (fun x -> x = true) |> Array.length) 
-        | _ -> 
-            printfn "Vous ne suivez pas de nouveaux comptes"
+        | false ->  
+            printfn "\nVous ne suivez pas de nouveaux comptes" 
 
+
+let tryUnfollowAccount (optionFollowersIds : seq<int64> option) (expectedAccount : string)=
+        let followersIds = optionFollowersIds.Value
+        printfn "Le compte %s a %i subscriptions" expectedAccount (followersIds |> Seq.length)
+    
+        printfn "Quelle mot clé souhaitez vous analyser dans la description des subscriptions?"
+        let expectedkeyWord = Console.ReadLine()
+    
+        let allDescriptions = followersIds |> Seq.map (fun x -> Async.RunSynchronously (getDescriptionUserAsync x))
+        let allUserIdsWithMatchingKeyword = 
+            allDescriptions |>
+            Seq.filter (fun twitterUser -> twitterUser.IsSome && twitterUser.Value.Description.ToLower().Contains(expectedkeyWord.ToLower())) |>
+            Seq.map (fun x -> x.Value) |>
+            Seq.toArray
+
+        printfn "Il y a %i potentiels personnes à unfollow, voulez vous arrêter de les suivre? (y/n)" allUserIdsWithMatchingKeyword.Length
+  
+        let answer = Console.ReadLine()
+
+        match answer.ToLower().Contains("y") with
+        | true ->
+            let userRemoved = allUserIdsWithMatchingKeyword |> Array.map (fun x -> 
+                printf "."
+                Async.RunSynchronously (unfollowUserAsync x))
+            printfn "\nVous ne suivez plus %i nouveaux comptes" (userRemoved |> Array.filter (fun x -> x = true) |> Array.length) 
+        | false ->  
+            printfn "\nVous ne suivez plus aucun nouveaux comptes" 
+
+
+
+
+let tryFollowUsers expectedAccount = 
+    let optionFollowersIds = listFollowersOf expectedAccount
+    if optionFollowersIds.IsNone then
+        printfn "Ce compte n'existe pas."
+    else
+        tryFollowAccount optionFollowersIds expectedAccount               
+
+let tryUnfollowUsers expectedAccount = 
+    let optionSubscriptionIds = listSubscriptionsOf expectedAccount
+    if optionSubscriptionIds.IsNone then
+        printfn "Ce compte n'existe pas."
+    else
+        tryUnfollowAccount optionSubscriptionIds expectedAccount               
 
 [<EntryPoint>]
 let main argv = 
@@ -50,11 +94,9 @@ let main argv =
     printfn "Quelle compte voulez vous analyser?"
     let expectedAccount = Console.ReadLine()
     
-    let optionFollowersIds = listFollowersOf expectedAccount
-
-    if optionFollowersIds.IsNone then
-        printfn "Ce compte n'existe pas."
-        fin()
+    if expectedAccount = "kickbanking" then
+        tryUnfollowUsers expectedAccount
     else
-        tryAnalyzeAccount optionFollowersIds expectedAccount
-        fin()
+        tryFollowUsers expectedAccount
+
+    fin()
