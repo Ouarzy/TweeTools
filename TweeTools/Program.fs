@@ -10,9 +10,9 @@ let fin ()=
      0
 
 
-let tryFollowAccount (optionFollowersIds : Option<TweetSharp.TwitterCursorList<int64>>) (expectedAccount : string)=
+let tryFollowAccount (optionFollowersIds : int64 list option) (expectedAccount : string)=
         let followersIds = optionFollowersIds.Value
-        printfn "Le compte %s a %i followers" expectedAccount followersIds.Count
+        printfn "Le compte %s a %i followers" expectedAccount followersIds.Length
     
         printfn "Quelle mot clé souhaitez vous analyser dans la description des followers?"
         let expectedkeyWord = Console.ReadLine()
@@ -38,7 +38,7 @@ let tryFollowAccount (optionFollowersIds : Option<TweetSharp.TwitterCursorList<i
             printfn "\nVous ne suivez pas de nouveaux comptes" 
 
 
-let tryUnfollowAccount (optionFollowersIds : seq<int64> option) (expectedAccount : string)=
+let tryUnfollowAccount (optionFollowersIds : int64 list option) (expectedAccount : string)=
         let followersIds = optionFollowersIds.Value
         printfn "Le compte %s a %i subscriptions" expectedAccount (followersIds |> Seq.length)
     
@@ -63,7 +63,7 @@ let tryUnfollowAccount (optionFollowersIds : seq<int64> option) (expectedAccount
                 Async.RunSynchronously (unfollowUserAsync x))
             printfn "\nVous ne suivez plus %i nouveaux comptes" (userRemoved |> Array.filter (fun x -> x = true) |> Array.length) 
         | false ->  
-            printfn "\nVous ne suivez plus aucun nouveaux comptes" 
+            printfn "\Rien ne s'est passé" 
 
 
 
@@ -76,7 +76,7 @@ let tryFollowUsers expectedAccount =
         tryFollowAccount optionFollowersIds expectedAccount               
 
 let tryUnfollowUsers expectedAccount = 
-    let optionSubscriptionIds = listSubscriptionsOf expectedAccount
+    let optionSubscriptionIds = listFriendsOf expectedAccount
     if optionSubscriptionIds.IsNone then
         printfn "Ce compte n'existe pas."
     else

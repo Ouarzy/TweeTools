@@ -34,19 +34,19 @@ let listFollowersOf userName =
     if result = null then
         None
     else
-        Some result
+        Some (result |> Seq.toList)
 
-let private listSubscriptionsOfOptions userName =
-        let option =new ListSubscriptionsOptions()
+let private listFriendIdsOfOfOptions userName =
+        let option =new ListFriendIdsOfOptions()
         option.ScreenName <- userName
         option
 
-let listSubscriptionsOf userName =
-    let result = twitterService.ListSubscriptions(listSubscriptionsOfOptions(userName)) |> Seq.map (fun x -> x.User.Id)
+let listFriendsOf userName =
+    let result = twitterService.ListFriendIdsOf(listFriendIdsOfOfOptions(userName))
     if result = null then
         None
     else
-        Some result
+        Some (result |> Seq.toList)
 
 let getUserProfileForOptions (userId : int64) =
     let option =new GetUserProfileForOptions()
