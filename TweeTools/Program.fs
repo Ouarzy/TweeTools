@@ -94,8 +94,10 @@ let main argv =
     printfn "Quelle compte voulez vous analyser?"
     let expectedAccount = Console.ReadLine()
     
-    if expectedAccount = "kickbanking" then
+    if expectedAccount = "kickbanking -u" then
         tryUnfollowUsers expectedAccount
+    elif expectedAccount = "kickbanking -f" then
+        tryFollowUsers expectedAccount
     else
         tryFollowUsers expectedAccount
 

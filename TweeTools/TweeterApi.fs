@@ -36,13 +36,13 @@ let listFollowersOf userName =
     else
         Some (result |> Seq.toList)
 
-let private listFriendIdsOfOfOptions userName =
+let private listFriendIdsOfOptions userName =
         let option =new ListFriendIdsOfOptions()
         option.ScreenName <- userName
         option
 
 let listFriendsOf userName =
-    let result = twitterService.ListFriendIdsOf(listFriendIdsOfOfOptions(userName))
+    let result = twitterService.ListFriendIdsOf(listFriendIdsOfOptions(userName))
     if result = null then
         None
     else
